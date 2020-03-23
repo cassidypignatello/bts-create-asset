@@ -6,9 +6,16 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "alt": "git+https://github.com/bitshares/alt.git#b6b42ceb790ca321402e9add95b9f77af8a7657d",
+    "bitsharesjs": "^3.2.0-rc2",
+    "classnames": "^2.2.1",
+    "immutable": "3.8.2",
+    "lodash-es": "^4.17.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-translate-component": "^0.15.1",
+    "tcomb": "2.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
