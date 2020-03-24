@@ -5,7 +5,6 @@ import idb_helper from "idb-helper";
 import { cloneDeep } from "lodash-es";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import SettingsStore from "stores/SettingsStore";
-// TODO: continue extracting components from here
 import { WalletTcomb } from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";

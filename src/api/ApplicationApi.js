@@ -9,7 +9,7 @@ import {
     ChainStore
 } from "bitsharesjs";
 import counterpart from "counterpart";
-import {Notification} from "bitshares-ui-style-guide";
+import { Notification } from "bitshares-ui-style-guide";
 
 const ApplicationApi = {
     create_account(
