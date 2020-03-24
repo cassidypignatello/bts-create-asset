@@ -96,6 +96,9 @@
       "last 1 safari version"
     ]
   },
+  "devDependencies": {
+    "git-rev-sync": "^1.12.0"
+  },
   "jest": {
     "roots": [
       "<rootDir>/src"

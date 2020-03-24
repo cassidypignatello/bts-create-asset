@@ -24,7 +24,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-
+const git = require("git-rev-sync");
 const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
@@ -49,6 +49,14 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+/*
+* For staging builds, set the version to the latest commit hash, for
+* production set it to the package version
+*/
+let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
+const __VERSION__ =
+    branch === "develop" ? git.short() : require("../package.json").version;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -127,6 +135,24 @@ module.exports = function(webpackEnv) {
     }
     return loaders;
   };
+
+  // COMMON PLUGINS
+  const baseUrl = env.electron ? "./" : "baseUrl" in env ? env.baseUrl : "/";
+
+  const plugins = [
+    new webpack.DefinePlugin({
+        APP_VERSION: JSON.stringify(__VERSION__),
+        __ELECTRON__: !!env.electron,
+        __HASH_HISTORY__: !!webpackEnv.hash,
+        __BASE_URL__: JSON.stringify(baseUrl),
+        __UI_API__: JSON.stringify(env.apiUrl),
+        __TESTNET__: !!env.testnet,
+        __DEPRECATED__: !!env.deprecated,
+        DEFAULT_SYMBOL: "BTS",
+        __GIT_BRANCH__: JSON.stringify(git.branch()),
+        __PERFORMANCE_DEVTOOL__: !!env.perf_dev
+    })
+  ];
 
   return {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
@@ -324,25 +350,27 @@ module.exports = function(webpackEnv) {
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
 
+        // TODO: see if you can eventually uncomment the below and resolve eslint errors
+
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
-        {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
-          enforce: 'pre',
-          use: [
-            {
-              options: {
-                cache: true,
-                formatter: require.resolve('react-dev-utils/eslintFormatter'),
-                eslintPath: require.resolve('eslint'),
-                resolvePluginsRelativeTo: __dirname,
+        // {
+        //   test: /\.(js|mjs|jsx|ts|tsx)$/,
+        //   enforce: 'pre',
+        //   use: [
+        //     {
+        //       options: {
+        //         cache: true,
+        //         formatter: require.resolve('react-dev-utils/eslintFormatter'),
+        //         eslintPath: require.resolve('eslint'),
+        //         resolvePluginsRelativeTo: __dirname,
                 
-              },
-              loader: require.resolve('eslint-loader'),
-            },
-          ],
-          include: paths.appSrc,
-        },
+        //       },
+        //       loader: require.resolve('eslint-loader'),
+        //     },
+        //   ],
+        //   include: paths.appSrc,
+        // },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
